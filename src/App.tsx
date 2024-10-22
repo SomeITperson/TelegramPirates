@@ -1,38 +1,41 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import twaLogo from './assets/tapps.png'
-import viteLogo from '/vite.svg'
+import { useState, Fragment, useEffect } from 'react'
+// import reactLogo from './assets/react.svg'
+// import twaLogo from './assets/tapps.png'
+// import viteLogo from '/vite.svg'
 import './App.css'
 
-import WebApp from '@twa-dev/sdk'
+// import WebApp from '@twa-dev/sdk'
+import { Game } from './models/Game'
+import type { CTX } from './types/models.types'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [game, setGame] = useState<Game>(new Game())
+  const ctx = document.getElementById("game") as CTX
+
+  function startGame() {
+    const newGame = new Game()
+    newGame.play(ctx)
+    setGame(newGame)
+  }
+
+  useEffect(() => {
+    startGame()
+  }, [])
 
   return (
     <>
-      <div>
-        <a href="https://ton.org/dev" target="_blank">
-          <img src={twaLogo} className="logo" alt="TWA logo" />
-        </a>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>TWA + Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-      </div>
-      {/*  */}
-      <div className="card">
-        <button onClick={() => WebApp.showAlert(`Hello World! Current count is ${count}`)}>
-            Show Alert
-        </button>
+      <canvas id="game">
+
+      </canvas>
+      <div className='bg-blue-500 grid grid-cols-10'>
+        {game?.board.cells.map((row, index) => (
+          <Fragment key={index}>
+            {row.map((cell) => (
+              <div className='bg-blue-400 border border-gray-400' style={{ width: cell.size, height: cell.size }}>
+              </div>
+            ))}
+          </Fragment>
+        ))}
       </div>
     </>
   )
